@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: app
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    tty: true
+    ports:
+      - 8080:8080
+    env_file:
+      - .env
+    depends_on:
+      - db
+    volumes:
+      - ./backend/src:/go/src
+    command:
+      - air
+
+  db:
+    image: postgres:16
+    volumes:
+      - postgres_go_volume:/var/lib/postgresql/data
+    env_file:
+      - .env
+    environment:
+      TZ: Asia/Tokyo
+      PGTZ: Asia/Tokyo
+    ports:
+      - 15433:5432
+
+volumes:
+  postgres_go_volume:
+    name: postgres_go_volume
