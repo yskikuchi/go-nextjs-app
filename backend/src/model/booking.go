@@ -11,7 +11,7 @@ type Booking struct {
 	ReferenceNumber string    `gorm:"not null" json:"referenceNumber"`
 	StartTime       time.Time `gorm:"not null" json:"startTime"`
 	EndTime         time.Time `gorm:"not null" json:"endTime"`
-	Status          string    `gorm:"not null" json:"status"`
+	Status          string    `gorm:"not null;default:'unconfirmed'" json:"status"`
 	Amount          float64   `gorm:"not null" json:"amount"`
 	CarID           uuid.UUID `json:"carId"`
 	Car             Car       `gorm:"foreignKey:CarID"`
