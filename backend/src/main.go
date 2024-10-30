@@ -5,8 +5,11 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/yskikuchi/go-nextjs-app/handler"
 	"github.com/yskikuchi/go-nextjs-app/infra"
+	"github.com/yskikuchi/go-nextjs-app/model"
 	"github.com/yskikuchi/go-nextjs-app/repository"
+	"github.com/yskikuchi/go-nextjs-app/routes"
 )
 
 func main() {
@@ -15,31 +18,21 @@ func main() {
 		log.Fatal(err)
 	}
 
-	r := gin.Default()
-	r.GET("/bookings", func(c *gin.Context) {
-		var tasks []repository.Booking
-		db.Find(&tasks)
-		c.JSON(http.StatusOK, tasks)
-	})
+	bookingRepo := repository.NewBookingRepository()
+	bookingHandler := handler.NewBookingHandler(bookingRepo)
 
-	r.POST("/bookings", func(c *gin.Context) {
-		var booking repository.Booking
-		if err := c.ShouldBindJSON(&booking); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-		db.Create(&booking)
-		c.JSON(http.StatusCreated, booking)
-	})
+	r := gin.Default()
+
+	routes.BookingRoutes(r, bookingHandler)
 
 	r.GET("/cars", func(c *gin.Context) {
-		var cars []repository.Car
+		var cars []model.Car
 		db.Find(&cars)
 		c.JSON(http.StatusOK, cars)
 	})
 
 	r.POST("/cars", func(c *gin.Context) {
-		var car repository.Car
+		var car model.Car
 		if err := c.ShouldBindJSON(&car); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return

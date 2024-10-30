@@ -1,26 +1,59 @@
 package repository
 
 import (
-	"time"
+	"errors"
+	"fmt"
+	"log"
 
-	"github.com/google/uuid"
+	"github.com/yskikuchi/go-nextjs-app/infra"
+	"github.com/yskikuchi/go-nextjs-app/model"
+	"gorm.io/gorm"
 )
 
-type Car struct {
-	ID        uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
-	Name      string
-	CarNumber string
-	Capacity  int
+type BookingRepository struct {
+	DB *gorm.DB
 }
 
-type Booking struct {
-	ID              uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
-	ReferenceNumber string
-	StartTime       time.Time `gorm:"not null"`
-	EndTime         time.Time `gorm:"not null"`
-	Status          string
-	Amount          float64
-	Car             Car
-	CreatedAt       time.Time `gorm:"default:CURRENT_TIMESTAMP"`
-	UpdatedAt       time.Time `gorm:"default:CURRENT_TIMESTAMP"`
+func NewBookingRepository() *BookingRepository {
+	db, err := infra.GetConn()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return &BookingRepository{
+		DB: db,
+	}
+}
+
+func (repo *BookingRepository) FindAll() ([]model.Booking, error) {
+	bookings := []model.Booking{}
+
+	if err := repo.DB.Find(&bookings).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, err
+		}
+	}
+
+	return bookings, nil
+}
+
+func (repo *BookingRepository) FindByReferenceNumber(referenceNumber string) (model.Booking, error) {
+	booking := model.Booking{}
+
+	if err := repo.DB.Where("reference_number = ?", referenceNumber).First(&booking).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return model.Booking{}, err
+		}
+	}
+
+	return booking, nil
+}
+
+func (repo *BookingRepository) Create(booking *model.Booking) (model.Booking, error) {
+	fmt.Println("リポジトリ", booking)
+	if err := repo.DB.Create(&booking).Error; err != nil {
+		return model.Booking{}, err
+	}
+
+	return *booking, nil
 }
