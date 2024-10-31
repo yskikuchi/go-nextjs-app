@@ -7,8 +7,10 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"github.com/yskikuchi/go-nextjs-app/model"
 	"github.com/yskikuchi/go-nextjs-app/repository"
+	cv "github.com/yskikuchi/go-nextjs-app/validator"
 )
 
 type BookingHandler struct {
@@ -33,6 +35,14 @@ func (h *BookingHandler) FindAll(c *gin.Context) {
 func (h *BookingHandler) Create(c *gin.Context) {
 	var booking model.Booking
 	if err := c.ShouldBindJSON(&booking); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	validate := validator.New()
+	validate.RegisterValidation("mustBeAfterNow", cv.MustBeAfterNow)
+
+	if err := validate.Struct(booking); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
