@@ -2,7 +2,6 @@ package repository
 
 import (
 	"errors"
-	"fmt"
 	"log"
 
 	"github.com/yskikuchi/go-nextjs-app/infra"
@@ -50,7 +49,6 @@ func (repo *BookingRepository) FindByReferenceNumber(referenceNumber string) (mo
 }
 
 func (repo *BookingRepository) Create(booking *model.Booking) (model.Booking, error) {
-	fmt.Println("リポジトリ", booking)
 	if err := repo.DB.Create(&booking).Error; err != nil {
 		return model.Booking{}, err
 	}
