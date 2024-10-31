@@ -9,3 +9,8 @@ func BookingRoutes(router *gin.Engine, bookingHandler *handler.BookingHandler) {
 	router.GET("/bookings", bookingHandler.FindAll)
 	router.POST("/bookings", bookingHandler.Create)
 }
+
+func CarRoutes(router *gin.Engine, carHandler *handler.CarHandler) {
+	router.GET("/cars", carHandler.FindAll)
+	router.POST("/cars", carHandler.Create)
+}
