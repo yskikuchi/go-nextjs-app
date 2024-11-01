@@ -78,6 +78,24 @@ func (h *BookingHandler) Approve(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Approved"})
 }
 
+func (h *BookingHandler) Cancel(c *gin.Context) {
+	id := c.Param("id")
+	booking, err := h.Repo.FindByID(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Booking not found"})
+		return
+	}
+
+	booking.Status = "canceled"
+	booking, err = h.Repo.Update(booking)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Canceled"})
+}
+
 // 予約参照番号を生成する
 func generateReferenceNumber(h *BookingHandler) (string, error) {
 	const maxAttempts = 5
