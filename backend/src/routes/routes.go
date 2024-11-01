@@ -10,6 +10,7 @@ func BookingRoutes(router *gin.Engine, bookingHandler *handler.BookingHandler) {
 	router.POST("/bookings", bookingHandler.Create)
 	router.POST("/bookings/:id/approve", bookingHandler.Approve)
 	router.POST("/bookings/:id/cancel", bookingHandler.Cancel)
+	router.POST("/bookings/search", bookingHandler.Search)
 }
 
 func CarRoutes(router *gin.Engine, carHandler *handler.CarHandler) {

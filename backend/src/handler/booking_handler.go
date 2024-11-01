@@ -33,6 +33,22 @@ func (h *BookingHandler) FindAll(c *gin.Context) {
 	c.JSON(http.StatusOK, bookings)
 }
 
+func (h *BookingHandler) Search(c *gin.Context) {
+	searchParams := model.BookingSearch{}
+	if err := c.BindJSON(&searchParams); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	booking, err := h.Repo.FindByReferenceNumberAndEmail(searchParams.ReferenceNumber, searchParams.UserEmail)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Booking not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, booking)
+}
+
 func (h *BookingHandler) Create(c *gin.Context) {
 	var booking model.Booking
 	if err := c.ShouldBindJSON(&booking); err != nil {
