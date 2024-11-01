@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/big"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -39,12 +40,9 @@ func (h *BookingHandler) Create(c *gin.Context) {
 		return
 	}
 
-	validate := validator.New()
-	validate.RegisterValidation("mustBeAfterNow", cv.MustBeAfterNow)
-
-	if err := validate.Struct(booking); err != nil {
+	err := validateBooking(h, &booking)
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
 	}
 
 	referenceNumber, err := generateReferenceNumber(h)
@@ -85,4 +83,23 @@ func generateReferenceNumber(h *BookingHandler) (string, error) {
 	}
 
 	return "", fmt.Errorf("failed to generate reference number")
+}
+
+// TODO: 別ファイルへ切り出したい...
+func validateBooking(h *BookingHandler, booking *model.Booking) error {
+	validate := validator.New()
+	validate.RegisterValidation("mustBeAfterNow", cv.MustBeAfterNow)
+
+	if err := validate.Struct(booking); err != nil {
+		return err
+	}
+
+	// 既存の予約と重複しないかを検証する
+	_, err := h.Repo.FindByCarIDAndTimeRange(booking.CarID.String(), booking.StartTime.Format(time.RFC3339), booking.EndTime.Format(time.RFC3339))
+
+	if err == nil {
+		return err
+	}
+
+	return nil
 }

@@ -48,6 +48,19 @@ func (repo *BookingRepository) FindByReferenceNumber(referenceNumber string) (mo
 	return booking, nil
 }
 
+// 既存の予約と重複しないかの検証に使用
+func (repo *BookingRepository) FindByCarIDAndTimeRange(carID string, startTime string, endTime string) (model.Booking, error) {
+	booking := model.Booking{}
+
+	if err := repo.DB.Where("car_id = ? AND start_time < ? AND end_time > ?", carID, endTime, startTime).First(&booking).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return model.Booking{}, err
+		}
+	}
+
+	return booking, nil
+}
+
 func (repo *BookingRepository) Create(booking *model.Booking) (model.Booking, error) {
 	if err := repo.DB.Create(&booking).Error; err != nil {
 		return model.Booking{}, err
