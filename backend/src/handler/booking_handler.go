@@ -43,6 +43,7 @@ func (h *BookingHandler) Create(c *gin.Context) {
 	err := validateBooking(h, &booking)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	referenceNumber, err := generateReferenceNumber(h)
@@ -133,8 +134,9 @@ func validateBooking(h *BookingHandler, booking *model.Booking) error {
 	// 既存の予約と重複しないかを検証する
 	_, err := h.Repo.FindByCarIDAndTimeRange(booking.CarID.String(), booking.StartTime.Format(time.RFC3339), booking.EndTime.Format(time.RFC3339))
 
+	// 既存の予約が見つかった場合はエラーを返す
 	if err == nil {
-		return err
+		return fmt.Errorf("選択した時間帯で既に予約が入っています")
 	}
 
 	return nil
