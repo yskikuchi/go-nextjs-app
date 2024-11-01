@@ -1,0 +1,4 @@
+ALTER TABLE bookings
+    ADD COLUMN user_name VARCHAR(255) DEFAULT '' NOT NULL,
+    ADD COLUMN user_email VARCHAR(255) DEFAULT '' NOT NULL;
+
