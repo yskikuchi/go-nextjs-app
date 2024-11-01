@@ -36,6 +36,18 @@ func (repo *BookingRepository) FindAll() ([]model.Booking, error) {
 	return bookings, nil
 }
 
+func (repo *BookingRepository) FindByID(id string) (model.Booking, error) {
+	booking := model.Booking{}
+
+	if err := repo.DB.Where("id = ?", id).First(&booking).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return model.Booking{}, err
+		}
+	}
+
+	return booking, nil
+}
+
 func (repo *BookingRepository) FindByReferenceNumber(referenceNumber string) (model.Booking, error) {
 	booking := model.Booking{}
 
@@ -67,4 +79,11 @@ func (repo *BookingRepository) Create(booking *model.Booking) (model.Booking, er
 	}
 
 	return *booking, nil
+}
+
+func (repo *BookingRepository) Update(booking model.Booking) (model.Booking, error) {
+	if err := repo.DB.Save(&booking).Error; err != nil {
+		return model.Booking{}, err
+	}
+	return booking, nil
 }
