@@ -27,7 +27,7 @@ func NewBookingRepository() *BookingRepository {
 func (repo *BookingRepository) FindAll() ([]model.Booking, error) {
 	bookings := []model.Booking{}
 
-	if err := repo.DB.Find(&bookings).Error; err != nil {
+	if err := repo.DB.Preload("Car").Find(&bookings).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, err
 		}
@@ -39,7 +39,7 @@ func (repo *BookingRepository) FindAll() ([]model.Booking, error) {
 func (repo *BookingRepository) FindByID(id string) (model.Booking, error) {
 	booking := model.Booking{}
 
-	if err := repo.DB.Where("id = ?", id).First(&booking).Error; err != nil {
+	if err := repo.DB.Preload("Car").Where("id = ?", id).First(&booking).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return model.Booking{}, err
 		}
@@ -51,7 +51,7 @@ func (repo *BookingRepository) FindByID(id string) (model.Booking, error) {
 func (repo *BookingRepository) FindByReferenceNumber(referenceNumber string) (model.Booking, error) {
 	booking := model.Booking{}
 
-	if err := repo.DB.Where("reference_number = ?", referenceNumber).First(&booking).Error; err != nil {
+	if err := repo.DB.Preload("Car").Where("reference_number = ?", referenceNumber).First(&booking).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return model.Booking{}, err
 		}
@@ -63,7 +63,7 @@ func (repo *BookingRepository) FindByReferenceNumber(referenceNumber string) (mo
 func (repo *BookingRepository) FindByReferenceNumberAndEmail(referenceNumber string, email string) (model.Booking, error) {
 	booking := model.Booking{}
 
-	if err := repo.DB.Where("reference_number = ? AND user_email = ?", referenceNumber, email).First(&booking).Error; err != nil {
+	if err := repo.DB.Preload("Car").Where("reference_number = ? AND user_email = ?", referenceNumber, email).First(&booking).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return model.Booking{}, err
 		}
