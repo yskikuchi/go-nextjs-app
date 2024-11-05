@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/yskikuchi/go-nextjs-app/model"
+	params "github.com/yskikuchi/go-nextjs-app/params/bookings"
 	"github.com/yskikuchi/go-nextjs-app/repository"
 	cv "github.com/yskikuchi/go-nextjs-app/validator"
 )
@@ -34,7 +35,7 @@ func (h *BookingHandler) FindAll(c *gin.Context) {
 }
 
 func (h *BookingHandler) Search(c *gin.Context) {
-	searchParams := model.BookingSearch{}
+	searchParams := params.BookingSearch{}
 	if err := c.BindJSON(&searchParams); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

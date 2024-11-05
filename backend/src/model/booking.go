@@ -20,8 +20,3 @@ type Booking struct {
 	CreatedAt       time.Time `gorm:"default:CURRENT_TIMESTAMP"`
 	UpdatedAt       time.Time `gorm:"default:CURRENT_TIMESTAMP"`
 }
-
-type BookingSearch struct {
-	ReferenceNumber string `json:"referenceNumber"`
-	UserEmail       string `json:"userEmail"`
-}
