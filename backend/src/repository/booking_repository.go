@@ -24,10 +24,18 @@ func NewBookingRepository() *BookingRepository {
 	}
 }
 
-func (repo *BookingRepository) FindAll() ([]model.Booking, error) {
+// statusを指定して予約を取得
+func (repo *BookingRepository) FindAll(status []string) ([]model.Booking, error) {
 	bookings := []model.Booking{}
 
-	if err := repo.DB.Preload("Car").Find(&bookings).Error; err != nil {
+	var err error
+	if status == nil {
+		err = repo.DB.Preload("Car").Find(&bookings).Error
+	} else {
+		err = repo.DB.Preload("Car").Where("status IN ?", status).Find(&bookings).Error
+	}
+
+	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, err
 		}

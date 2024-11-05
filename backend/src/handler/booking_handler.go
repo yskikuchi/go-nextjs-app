@@ -26,7 +26,8 @@ func NewBookingHandler(repo *repository.BookingRepository) *BookingHandler {
 }
 
 func (h *BookingHandler) FindAll(c *gin.Context) {
-	bookings, err := h.Repo.FindAll()
+	status := c.QueryArray("status[]")
+	bookings, err := h.Repo.FindAll(status)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
