@@ -12,6 +12,7 @@ import (
 	"github.com/yskikuchi/go-nextjs-app/model"
 	params "github.com/yskikuchi/go-nextjs-app/params/bookings"
 	"github.com/yskikuchi/go-nextjs-app/repository"
+	response "github.com/yskikuchi/go-nextjs-app/response/bookings"
 	cv "github.com/yskikuchi/go-nextjs-app/validator"
 )
 
@@ -33,6 +34,27 @@ func (h *BookingHandler) FindAll(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, bookings)
+}
+
+func (h *BookingHandler) FindAllSummaries(c *gin.Context) {
+	status := c.QueryArray("status[]")
+	bookings, err := h.Repo.FindAll(status)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	summaries := make([]response.BookingSummary, 0, len(bookings))
+	for _, booking := range bookings {
+		summary := response.BookingSummary{
+			Car:       booking.Car,
+			StartTime: booking.StartTime,
+			EndTime:   booking.EndTime,
+		}
+		summaries = append(summaries, summary)
+	}
+
+	c.JSON(http.StatusOK, summaries)
 }
 
 func (h *BookingHandler) Search(c *gin.Context) {
