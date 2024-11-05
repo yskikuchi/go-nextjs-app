@@ -40,3 +40,11 @@ func (repo *CarRepository) Create(car *model.Car) (model.Car, error) {
 
 	return *car, nil
 }
+
+func (repo *CarRepository) Update(id string, car *model.Car) (model.Car, error) {
+	if err := repo.DB.Model(&model.Car{}).Where("id = ?", id).Updates(&car).Error; err != nil {
+		return model.Car{}, err
+	}
+
+	return *car, nil
+}

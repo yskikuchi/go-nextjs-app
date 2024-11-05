@@ -42,3 +42,20 @@ func (h *CarHandler) Create(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, gin.H{"message": "Created"})
 }
+
+func (h *CarHandler) Update(c *gin.Context){
+	var car model.Car
+	if err := c.ShouldBindJSON(&car); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	id := c.Param("id")
+	car, err := h.Repo.Update(id, &car)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Updated"})
+}

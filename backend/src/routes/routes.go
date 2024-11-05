@@ -17,4 +17,5 @@ func BookingRoutes(router *gin.Engine, bookingHandler *handler.BookingHandler) {
 func CarRoutes(router *gin.Engine, carHandler *handler.CarHandler) {
 	router.GET("/cars", carHandler.FindAll)
 	router.POST("/cars", carHandler.Create)
+	router.PATCH("/cars/:id", carHandler.Update)
 }
