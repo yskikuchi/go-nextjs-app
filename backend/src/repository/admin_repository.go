@@ -37,3 +37,12 @@ func (repo *AdminRepository) Create(admin *model.Admin) (model.Admin, error) {
 
 	return *admin, nil
 }
+
+func (repo *AdminRepository) FindByEmail(email string) (model.Admin, error) {
+	var admin model.Admin
+	if err := repo.DB.Where("email = ?", email).First(&admin).Error; err != nil {
+		return model.Admin{}, err
+	}
+
+	return admin, nil
+}

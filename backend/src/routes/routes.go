@@ -22,4 +22,5 @@ func CarRoutes(router *gin.Engine, carHandler *handler.CarHandler) {
 
 func AdminRoutes(router *gin.Engine, adminHandler *handler.AdminHandler) {
 	router.POST("/admins", adminHandler.Create)
+	router.POST("/admins/login", adminHandler.Login)
 }
