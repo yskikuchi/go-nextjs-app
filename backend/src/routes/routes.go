@@ -19,3 +19,7 @@ func CarRoutes(router *gin.Engine, carHandler *handler.CarHandler) {
 	router.POST("/cars", carHandler.Create)
 	router.PATCH("/cars/:id", carHandler.Update)
 }
+
+func AdminRoutes(router *gin.Engine, adminHandler *handler.AdminHandler) {
+	router.POST("/admins", adminHandler.Create)
+}

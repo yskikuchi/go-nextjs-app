@@ -14,10 +14,14 @@ func main() {
 	carRepo := repository.NewCarRepository()
 	carHandler := handler.NewCarHandler(carRepo)
 
+	adminRepo := repository.NewAdminRepository()
+	adminHandler := handler.NewAdminHandler(adminRepo)
+
 	r := gin.Default()
 
 	routes.BookingRoutes(r, bookingHandler)
 	routes.CarRoutes(r, carHandler)
+	routes.AdminRoutes(r, adminHandler)
 
 	r.Run()
 }
