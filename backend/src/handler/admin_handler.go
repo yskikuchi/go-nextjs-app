@@ -37,24 +37,24 @@ func (h *AdminHandler) Create(c *gin.Context) {
 
 func (h *AdminHandler) Login(c *gin.Context) {
 	var admin model.Admin
-	var exsisting_admin model.Admin
+	var existing_admin model.Admin
 	if err := c.ShouldBindJSON(&admin); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	exsisting_admin, err := h.Repo.FindByEmail(admin.Email)
+	existing_admin, err := h.Repo.FindByEmail(admin.Email)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "メールアドレスまたはパスワードが正しくありません"})
 		return
 	}
 
-	if service.VerifyPassword(exsisting_admin.Password, admin.Password) != nil {
+	if service.VerifyPassword(existing_admin.Password, admin.Password) != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "メールアドレスまたはパスワードが正しくありません"})
 		return
 	}
 
-	token, err := service.GenerateToken(admin.ID)
+	token, err := service.GenerateToken(existing_admin.ID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
