@@ -7,4 +7,6 @@ type Car struct {
 	Name      string `gorm:"not null" json:"name"`
 	CarNumber string `gorm:"not null" json:"carNumber"`
 	Capacity  int `gorm:"not null" json:"capacity"`
+	PriceForInitialTwelveHours int `gorm:"not null" json:"priceForInitialTwelveHours"`
+	PricePerAdditionalSixHours int `gorm:"not null" json:"pricePerAdditionalSixHours"`
 }
