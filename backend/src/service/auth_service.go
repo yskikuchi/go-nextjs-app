@@ -24,7 +24,7 @@ func VerifyPassword(hashedPassword, password string) error {
 
 func GenerateToken(id uuid.UUID) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"userId": id.String(),
+		"user_id": id.String(),
 		"exp":    time.Now().Add(time.Hour * 24).Unix(),
 	})
 	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET_KEY")))
