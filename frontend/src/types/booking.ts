@@ -23,8 +23,6 @@ export type BookingCreatePayload = {
   startTime: string;
   endTime: string;
   amount: number;
-  user: {
-    name: string;
-    email: string;
-  };
+  userName: string;
+  userEmail: string;
 };

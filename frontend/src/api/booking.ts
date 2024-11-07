@@ -14,7 +14,7 @@ export const postBooking = async (data: BookingCreatePayload) => {
     data
   );
 
-  if (result.status !== 200) {
+  if (result.status !== 201) {
     throw new Error('Failed to create a booking');
   }
 

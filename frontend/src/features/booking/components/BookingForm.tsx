@@ -27,13 +27,11 @@ export default function BookingForm() {
   const handleBook = async () => {
     const data = {
       carId: selectedCar?.id || '',
-      startTime: startTime.toISOString().slice(0, -1),
-      endTime: endTime.toISOString().slice(0, -1),
+      startTime: startTime.toISOString(),
+      endTime: endTime.toISOString(),
       amount: totalAmount,
-      user: {
-        name: `${lastName} ${firstName}`,
-        email: email,
-      },
+      userName: `${lastName} ${firstName}`,
+      userEmail: email,
     };
 
     try {
