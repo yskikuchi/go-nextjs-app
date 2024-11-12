@@ -1,7 +1,11 @@
+import Bookings from '@/features/booking/components/Bookings';
+
 export default function Page() {
   return (
-    <div>
-      <h1>Dashboard</h1>
-    </div>
+    <>
+      <div>
+        <Bookings />
+      </div>
+    </>
   );
 }
