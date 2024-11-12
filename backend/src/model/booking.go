@@ -16,7 +16,7 @@ type Booking struct {
 	UserName        string    `gorm:"not null" json:"userName"`
 	UserEmail       string    `gorm:"not null" json:"userEmail"`
 	CarID           uuid.UUID `json:"carId"`
-	Car             Car       `gorm:"foreignKey:CarID"`
+	Car             Car       `gorm:"foreignKey:CarID" json:"car"`
 	CreatedAt       time.Time `gorm:"default:CURRENT_TIMESTAMP"`
 	UpdatedAt       time.Time `gorm:"default:CURRENT_TIMESTAMP"`
 }
